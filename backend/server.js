@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
+
 const authRoutes = require("./routes/authRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const { protect } = require("./middleware/authMiddleware");
@@ -10,16 +11,13 @@ const categoryRoutes = require("./routes/categoryRoutes");
 const supplierRoutes = require("./routes/supplierRoutes");
 const stockRoutes = require("./routes/stockRoutes");
 
-
 const app = express();
-app.get("/api/ping", (req, res) => {
-  res.json({ message: "API is alive" });
-});
-
 
 // Middleware
 app.use(express.json());
 app.use(cors());
+
+// Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/categories", categoryRoutes);
@@ -28,15 +26,19 @@ app.use("/api/stock", stockRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 
 
-// Test route
+
+// Test routes
 app.get("/", (req, res) => {
   res.send("Inventory Management API Running");
+});
+
+app.get("/api/ping", (req, res) => {
+  res.json({ message: "API is alive" });
 });
 
 app.get("/api/hello", (req, res) => {
   res.json({ message: "Hello API working" });
 });
-
 
 app.get("/api/test/protected", protect, (req, res) => {
   res.json({

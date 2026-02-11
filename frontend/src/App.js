@@ -7,8 +7,9 @@ import Products from "./pages/Products";
 import Categories from "./pages/Categories";
 import Suppliers from "./pages/Suppliers";
 import Stock from "./pages/Stock";
-
-
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import LearnMore from "./pages/LearnMore";
 import ProtectedRoute from "./auth/ProtectedRoute";
 
 function App() {
@@ -18,7 +19,9 @@ function App() {
         {/* Public routes */}
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
-
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/learn-more" element={<LearnMore />} />
         <Route
           path="/stock"
           element={

@@ -1,117 +1,109 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import api from "../api/axios";
 
-function Register() {
-  const navigate = useNavigate();
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-    role: "staff"
-  });
+function ForgotPassword() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [step, setStep] = useState(1); // 1 = enter email, 2 = reset password
+  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleRegister = async (e) => {
+  const handleEmailSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setLoading(true);
+    setMessage("");
+
     try {
-      await api.post("/auth/register", form);
-      navigate("/");
-    } catch {
-      setError("Registration failed");
-    } finally {
-      setLoading(false);
+      // Just check if user exists
+      await api.post("/auth/forgot-password", { email });
+      setStep(2);
+    } catch (err) {
+      setError(err.response?.data?.message || "User not found");
+    }
+  };
+
+  const handlePasswordSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setMessage("");
+
+    try {
+      const res = await api.post("/auth/reset-password", {
+        email,
+        password
+      });
+
+      setMessage(res.data.message);
+      setStep(3);
+    } catch (err) {
+      setError(err.response?.data?.message || "Something went wrong");
     }
   };
 
   return (
     <div style={styles.page}>
-      {/* BLOBS */}
       <div style={styles.blobLeft}></div>
       <div style={styles.blobRight}></div>
 
-      {/* NAVBAR */}
       <div style={styles.navbar}>
-        <div style={styles.logo}>Management Made Easier</div>
-        <div>
-          <Link to="/">
-            <button style={styles.navButton}>Sign In</button>
-          </Link>
-        </div>
+        <div style={styles.logo}>YOUR WEBSITE</div>
+        <Link to="/">
+          <button style={styles.navButton}>Sign In</button>
+        </Link>
       </div>
 
-      {/* HERO */}
       <div style={styles.hero}>
         <div style={styles.heroText}>
-          <h1 style={styles.heading}>Create Account</h1>
+          <h1 style={styles.heading}>Forgot Password</h1>
           <p style={styles.paragraph}>
-            Register to manage products, control stock levels and monitor
-            inventory efficiently.
+            Reset your password securely.
           </p>
         </div>
 
         <div style={styles.heroIllustration}>
           <div style={styles.illustrationBox}>
-            <div style={styles.formContainer}>
-              <h3 style={styles.formTitle}>Register</h3>
+            <div style={styles.loginContent}>
+              <h3 style={styles.formTitle}>Reset Password</h3>
 
               {error && <div style={styles.error}>{error}</div>}
+              {message && <div style={styles.success}>{message}</div>}
 
-              <form onSubmit={handleRegister} style={styles.form}>
-                <input
-                  name="name"
-                  placeholder="Full Name"
-                  onChange={handleChange}
-                  required
-                  style={styles.input}
-                />
+              {step === 1 && (
+                <form onSubmit={handleEmailSubmit}>
+                  <input
+                    type="email"
+                    placeholder="Enter your email"
+                    required
+                    onChange={(e) => setEmail(e.target.value)}
+                    style={styles.input}
+                  />
+                  <button type="submit" style={styles.primaryBtn}>
+                    Verify Email
+                  </button>
+                </form>
+              )}
 
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  onChange={handleChange}
-                  required
-                  style={styles.input}
-                />
+              {step === 2 && (
+                <form onSubmit={handlePasswordSubmit}>
+                  <input
+                    type="password"
+                    placeholder="Enter New Password"
+                    required
+                    onChange={(e) => setPassword(e.target.value)}
+                    style={styles.input}
+                  />
+                  <button type="submit" style={styles.primaryBtn}>
+                    Update Password
+                  </button>
+                </form>
+              )}
 
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="Password"
-                  onChange={handleChange}
-                  required
-                  style={styles.input}
-                />
+              
 
-                <select
-                  name="role"
-                  onChange={handleChange}
-                  style={styles.input}
-                >
-                  <option value="staff">Staff</option>
-                  <option value="admin">Admin</option>
-                </select>
-
-                <button
-                  type="submit"
-                  style={styles.primaryBtn}
-                  disabled={loading}
-                >
-                  {loading ? "Creating..." : "Create Account"}
-                </button>
-              </form>
-
-              <div style={styles.switch}>
-                Already have an account?{" "}
-                <Link to="/" style={styles.link}>
+              <div style={styles.createAccount}>
+                Back to{" "}
+                <Link to="/" style={styles.createLink}>
                   Sign In
                 </Link>
               </div>
@@ -124,7 +116,7 @@ function Register() {
   );
 }
 
-export default Register;
+export default ForgotPassword;
 
 const styles = {
   page: {
@@ -197,9 +189,7 @@ const styles = {
     zIndex: 2
   },
 
-  heroText: {
-    width: "45%"
-  },
+  heroText: { width: "45%" },
 
   heading: {
     fontSize: 48,
@@ -223,36 +213,27 @@ const styles = {
 
   illustrationBox: {
     width: 420,
-    minHeight: 380,
+    minHeight: 320,
     background: "linear-gradient(145deg,#0f172a,#1e293b)",
     borderRadius: 24,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    boxShadow: "0 20px 50px rgba(15,23,42,0.35)",
-    color: "#ffffff"
+    color: "#ffffff",
+    boxShadow: "0 20px 50px rgba(15,23,42,0.35)"
   },
 
-  formContainer: {
-    width: "80%"
-  },
+  loginContent: { width: "80%" },
 
-  formTitle: {
-    marginBottom: 20
-  },
-
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 16
-  },
+  formTitle: { marginBottom: 15 },
 
   input: {
     width: "100%",
-    padding: "12px 14px",
+    padding: "10px 12px",
     borderRadius: 8,
     border: "none",
-    fontSize: 14
+    fontSize: 14,
+    marginBottom: 15
   },
 
   primaryBtn: {
@@ -264,17 +245,16 @@ const styles = {
     borderRadius: 30,
     fontSize: 14,
     cursor: "pointer",
-    marginTop: 8
+    marginBottom: 15
   },
 
-  switch: {
-    marginTop: 18,
+  createAccount: {
     textAlign: "center",
     fontSize: 13,
     color: "#cbd5e1"
   },
 
-  link: {
+  createLink: {
     color: "#f43f5e",
     textDecoration: "none",
     fontWeight: 500
@@ -283,6 +263,16 @@ const styles = {
   error: {
     background: "#fee2e2",
     color: "#991b1b",
+    padding: 8,
+    borderRadius: 6,
+    fontSize: 13,
+    marginBottom: 12,
+    textAlign: "center"
+  },
+
+  success: {
+    background: "#dcfce7",
+    color: "#166534",
     padding: 8,
     borderRadius: 6,
     fontSize: 13,

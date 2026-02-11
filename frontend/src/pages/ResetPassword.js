@@ -1,91 +1,69 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import api from "../api/axios";
 
-function Login() {
+function ResetPassword() {
+  const { token } = useParams();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ email: "", password: "" });
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage("");
     setError("");
-    setLoading(true);
+
     try {
-      const res = await api.post("/auth/login", form);
-      localStorage.setItem("token", res.data.token);
-      navigate("/dashboard");
-    } catch {
-      setError("Invalid email or password");
-    } finally {
-      setLoading(false);
+      const res = await api.post(`/auth/reset-password/${token}`, {
+        password
+      });
+
+      setMessage(res.data.message);
+
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+
+    } catch (err) {
+      setError(err.response?.data?.message || "Invalid or expired token");
     }
   };
 
   return (
     <div style={styles.page}>
-      {/* BACKGROUND BLOBS */}
       <div style={styles.blobLeft}></div>
       <div style={styles.blobRight}></div>
 
-      {/* NAVBAR */}
       <div style={styles.navbar}>
-        <div style={styles.logo}>Management Made Easier</div>
-        <div>
-          <Link to="/register">
-            <button style={styles.navButton}>Get Started</button>
-          </Link>
-        </div>
+        <div style={styles.logo}>YOUR WEBSITE</div>
       </div>
 
-      {/* HERO */}
       <div style={styles.hero}>
         <div style={styles.heroText}>
-          <h1 style={styles.heading}>Inventory Management</h1>
+          <h1 style={styles.heading}>Reset Password</h1>
           <p style={styles.paragraph}>
-            A modern enterprise platform designed to manage products, suppliers, categories, and stock operations with real-time visibility and structured administrative control.
+            Enter your new password below to regain access.
           </p>
-<button
-  style={styles.learnBtn}
-  onClick={() => navigate("/learn-more")}
->
-  Learn More
-</button>
         </div>
 
         <div style={styles.heroIllustration}>
           <div style={styles.illustrationBox}>
-            {/* LOGIN FORM */}
             <div style={styles.loginContent}>
-              <h3 style={{ marginBottom: 15 }}>Sign In</h3>
+              <h3 style={styles.formTitle}>New Password</h3>
 
               {error && <div style={styles.error}>{error}</div>}
+              {message && <div style={styles.success}>{message}</div>}
 
-              <form onSubmit={handleLogin}>
-                <div style={{ marginBottom: 15 }}>
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    onChange={handleChange}
-                    required
-                    style={styles.input}
-                  />
-                </div>
-
+              <form onSubmit={handleSubmit}>
                 <div style={{ marginBottom: 15, position: "relative" }}>
                   <input
                     type={showPassword ? "text" : "password"}
-                    name="password"
-                    placeholder="Password"
-                    onChange={handleChange}
+                    placeholder="New Password"
                     required
+                    onChange={(e) => setPassword(e.target.value)}
                     style={styles.input}
                   />
                   <span
@@ -95,28 +73,11 @@ function Login() {
                     {showPassword ? "Hide" : "Show"}
                   </span>
                 </div>
-                <div style={styles.forgotWrap}>
-                  <Link to="/forgot-password" style={styles.forgotLink}>
-                    Forgot Password?
-                  </Link>
-                </div>
 
-                <button
-                  type="submit"
-                  style={styles.primaryBtn}
-                  disabled={loading}
-                >
-                  {loading ? "Signing in..." : "Access Dashboard"}
+                <button type="submit" style={styles.primaryBtn}>
+                  Reset Password
                 </button>
               </form>
-
-              {/* CREATE ACCOUNT BELOW BUTTON */}
-              <div style={styles.createAccount}>
-                Don’t have an account?{" "}
-                <Link to="/register" style={styles.createLink}>
-                  Create Account
-                </Link>
-              </div>
 
             </div>
           </div>
@@ -126,7 +87,7 @@ function Login() {
   );
 }
 
-export default Login;
+export default ResetPassword;
 
 const styles = {
   page: {
@@ -174,26 +135,6 @@ const styles = {
     fontStyle: "italic",
     color: "#0f172a"
   },
-  forgotWrap: {
-  textAlign: "right",
-  marginBottom: 12
-},
-
-forgotLink: {
-  fontSize: 12,
-  color: "#f43f5e",
-  textDecoration: "none"
-},
-
-  navButton: {
-    background: "#0f172a",
-    color: "#fff",
-    border: "none",
-    padding: "10px 22px",
-    borderRadius: 30,
-    cursor: "pointer",
-    fontSize: 14
-  },
 
   hero: {
     width: "90%",
@@ -226,16 +167,6 @@ forgotLink: {
     marginBottom: 30
   },
 
-  learnBtn: {
-    background: "#0f172a",
-    color: "#ffffff",
-    border: "none",
-    padding: "14px 32px",
-    borderRadius: 30,
-    fontSize: 15,
-    cursor: "pointer"
-  },
-
   heroIllustration: {
     width: "55%",
     display: "flex",
@@ -257,6 +188,10 @@ forgotLink: {
 
   loginContent: {
     width: "80%"
+  },
+
+  formTitle: {
+    marginBottom: 15
   },
 
   input: {
@@ -286,24 +221,22 @@ forgotLink: {
     borderRadius: 30,
     fontSize: 14,
     cursor: "pointer",
-    marginBottom: 15
-  },
-
-  createAccount: {
-    textAlign: "center",
-    fontSize: 13,
-    color: "#cbd5e1"
-  },
-
-  createLink: {
-    color: "#f43f5e",
-    textDecoration: "none",
-    fontWeight: 500
+    marginTop: 5
   },
 
   error: {
     background: "#fee2e2",
     color: "#991b1b",
+    padding: 8,
+    borderRadius: 6,
+    fontSize: 13,
+    marginBottom: 12,
+    textAlign: "center"
+  },
+
+  success: {
+    background: "#dcfce7",
+    color: "#166534",
     padding: 8,
     borderRadius: 6,
     fontSize: 13,
