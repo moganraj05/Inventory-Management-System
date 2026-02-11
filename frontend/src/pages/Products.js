@@ -46,8 +46,7 @@ function Products() {
     },
     [location.search]
   );
-
-  //  FINAL DERIVED DATA (NO WARNINGS)
+  
   const finalProducts = applyLowStockFilter(products).filter((p) => {
     const matchesSearch =
       p.name.toLowerCase().includes(search.toLowerCase()) ||
