@@ -32,76 +32,92 @@ function Register() {
   };
 
   return (
-    <div style={styles.layout}>
-      {/* LEFT BRAND PANEL */}
-      <div style={styles.left}>
-        <h1 style={styles.brand}>Inventory Admin</h1>
-        <p style={styles.tagline}>Inventory management system</p>
+    <div style={styles.page}>
+      {/* BLOBS */}
+      <div style={styles.blobLeft}></div>
+      <div style={styles.blobRight}></div>
+
+      {/* NAVBAR */}
+      <div style={styles.navbar}>
+        <div style={styles.logo}>YOUR WEBSITE</div>
+        <div>
+          <Link to="/">
+            <button style={styles.navButton}>Sign In</button>
+          </Link>
+        </div>
       </div>
 
-      {/* RIGHT FORM PANEL */}
-      <div style={styles.right}>
-        <div style={styles.card}>
-          <h2 style={styles.formTitle}>Create account</h2>
-
-          {error && <div style={styles.error}>{error}</div>}
-
-          <form onSubmit={handleRegister}>
-            <div style={styles.field}>
-              <label style={styles.label}>Full name</label>
-              <input
-                name="name"
-                onChange={handleChange}
-                required
-                style={styles.input}
-              />
-            </div>
-
-            <div style={styles.field}>
-              <label style={styles.label}>Email</label>
-              <input
-                type="email"
-                name="email"
-                onChange={handleChange}
-                required
-                style={styles.input}
-              />
-            </div>
-
-            <div style={styles.field}>
-              <label style={styles.label}>Password</label>
-              <input
-                type="password"
-                name="password"
-                onChange={handleChange}
-                required
-                style={styles.input}
-              />
-            </div>
-
-            <div style={styles.field}>
-              <label style={styles.label}>Role</label>
-              <select
-                name="role"
-                onChange={handleChange}
-                style={styles.input}
-              >
-                <option value="staff">Staff</option>
-                <option value="admin">Admin</option>
-              </select>
-            </div>
-
-            <button type="submit" style={styles.primaryBtn} disabled={loading}>
-              {loading ? "Creating..." : "Create account"}
-            </button>
-          </form>
-
-          <p style={styles.switch}>
-            Already have an account?{" "}
-            <Link to="/" style={styles.link}>
-              Sign in
-            </Link>
+      {/* HERO */}
+      <div style={styles.hero}>
+        <div style={styles.heroText}>
+          <h1 style={styles.heading}>Create Account</h1>
+          <p style={styles.paragraph}>
+            Register to manage products, control stock levels and monitor
+            inventory efficiently.
           </p>
+        </div>
+
+        <div style={styles.heroIllustration}>
+          <div style={styles.illustrationBox}>
+            <div style={styles.formContainer}>
+              <h3 style={styles.formTitle}>Register</h3>
+
+              {error && <div style={styles.error}>{error}</div>}
+
+              <form onSubmit={handleRegister} style={styles.form}>
+                <input
+                  name="name"
+                  placeholder="Full Name"
+                  onChange={handleChange}
+                  required
+                  style={styles.input}
+                />
+
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Email"
+                  onChange={handleChange}
+                  required
+                  style={styles.input}
+                />
+
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  onChange={handleChange}
+                  required
+                  style={styles.input}
+                />
+
+                <select
+                  name="role"
+                  onChange={handleChange}
+                  style={styles.input}
+                >
+                  <option value="staff">Staff</option>
+                  <option value="admin">Admin</option>
+                </select>
+
+                <button
+                  type="submit"
+                  style={styles.primaryBtn}
+                  disabled={loading}
+                >
+                  {loading ? "Creating..." : "Create Account"}
+                </button>
+              </form>
+
+              <div style={styles.switch}>
+                Already have an account?{" "}
+                <Link to="/" style={styles.link}>
+                  Sign In
+                </Link>
+              </div>
+
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -109,122 +125,168 @@ function Register() {
 }
 
 export default Register;
+
 const styles = {
-  layout: {
+  page: {
     minHeight: "100vh",
+    background: "#f5f3ff",
+    fontFamily: '"Segoe UI", system-ui, sans-serif',
+    position: "relative",
+    overflowX: "hidden"
+  },
+
+  blobLeft: {
+    position: "fixed",
+    width: 600,
+    height: 600,
+    background: "#f43f5e",
+    borderRadius: "50%",
+    top: -250,
+    left: -250,
+    zIndex: 0
+  },
+
+  blobRight: {
+    position: "fixed",
+    width: 700,
+    height: 700,
+    background: "#0f172a",
+    borderRadius: "50%",
+    bottom: -350,
+    right: -350,
+    zIndex: 0
+  },
+
+  navbar: {
+    width: "100%",
+    padding: "30px 70px",
     display: "flex",
-    fontFamily: "system-ui, -apple-system, sans-serif"
-  },
-
-  left: {
-    flex: 1,
-    background: "linear-gradient(180deg, #020617, #0f172a)",
-    color: "#e5e7eb",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    paddingLeft: 80
-  },
-
-  brand: {
-    fontSize: 32,
-    fontWeight: 600,
-    marginBottom: 10
-  },
-
-  tagline: {
-    fontSize: 14,
-    color: "#94a3b8"
-  },
-
-  right: {
-    flex: 1,
-    display: "flex",
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
-    background: "#f8fafc"
+    position: "relative",
+    zIndex: 2
   },
 
-  card: {
-    width: 380,
+  logo: {
+    fontWeight: 700,
+    fontStyle: "italic",
+    color: "#0f172a"
+  },
+
+  navButton: {
+    background: "#0f172a",
+    color: "#fff",
+    border: "none",
+    padding: "10px 22px",
+    borderRadius: 30,
+    cursor: "pointer",
+    fontSize: 14
+  },
+
+  hero: {
+    width: "90%",
+    margin: "30px auto",
     background: "#ffffff",
-    padding: 32,
-    borderRadius: 10,
-    boxShadow: "0 25px 40px rgba(0,0,0,0.15)"
+    borderRadius: 22,
+    padding: "60px 70px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    boxShadow: "0 25px 60px rgba(0,0,0,0.1)",
+    position: "relative",
+    zIndex: 2
+  },
+
+  heroText: {
+    width: "45%"
+  },
+
+  heading: {
+    fontSize: 48,
+    color: "#0f172a",
+    marginBottom: 20
+  },
+
+  paragraph: {
+    color: "#6b7280",
+    fontSize: 16,
+    lineHeight: 1.6,
+    marginBottom: 30
+  },
+
+  heroIllustration: {
+    width: "55%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+
+  illustrationBox: {
+    width: 420,
+    minHeight: 380,
+    background: "linear-gradient(145deg,#0f172a,#1e293b)",
+    borderRadius: 24,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    boxShadow: "0 20px 50px rgba(15,23,42,0.35)",
+    color: "#ffffff"
+  },
+
+  formContainer: {
+    width: "80%"
   },
 
   formTitle: {
-    marginBottom: 24,
-    fontSize: 20,
-    color: "#020617"
+    marginBottom: 20
   },
 
-  field: {
-    marginBottom: 16
-  },
-
-  label: {
-    display: "block",
-    marginBottom: 6,
-    fontSize: 13,
-    color: "#475569"
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 16
   },
 
   input: {
     width: "100%",
-    padding: "10px 12px",
-    borderRadius: 6,
-    border: "1px solid #cbd5f5",
-    fontSize: 14,
-    outline: "none"
-  },
-
-  passwordWrap: {
-    position: "relative"
-  },
-
-  show: {
-    position: "absolute",
-    right: 10,
-    top: "50%",
-    transform: "translateY(-50%)",
-    fontSize: 12,
-    color: "#2563eb",
-    cursor: "pointer"
+    padding: "12px 14px",
+    borderRadius: 8,
+    border: "none",
+    fontSize: 14
   },
 
   primaryBtn: {
     width: "100%",
     padding: 12,
-    background: "#2563eb",
+    background: "#f43f5e",
     color: "#fff",
     border: "none",
-    borderRadius: 6,
+    borderRadius: 30,
     fontSize: 14,
     cursor: "pointer",
-    marginTop: 10
-  },
-
-  error: {
-    background: "#fee2e2",
-    color: "#991b1b",
-    padding: 10,
-    borderRadius: 6,
-    fontSize: 13,
-    marginBottom: 16,
-    textAlign: "center"
+    marginTop: 8
   },
 
   switch: {
     marginTop: 18,
     textAlign: "center",
     fontSize: 13,
-    color: "#475569"
+    color: "#cbd5e1"
   },
 
   link: {
-    color: "#2563eb",
+    color: "#f43f5e",
     textDecoration: "none",
     fontWeight: 500
+  },
+
+  error: {
+    background: "#fee2e2",
+    color: "#991b1b",
+    padding: 8,
+    borderRadius: 6,
+    fontSize: 13,
+    marginBottom: 12,
+    textAlign: "center"
   }
 };
