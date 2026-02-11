@@ -73,7 +73,6 @@ function Stock() {
         {/* GRID */}
         <div className="stock-grid">
 
-          {/* LEFT: STOCK FORM (FIXED HEIGHT) */}
           <div className="card stock-form-card">
             <h3>Stock In / Stock Out</h3>
 
