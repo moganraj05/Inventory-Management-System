@@ -3,9 +3,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
-
-
-// Register
 exports.register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
@@ -14,9 +11,7 @@ exports.register = async (req, res) => {
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
-
     const hashedPassword = await bcrypt.hash(password, 10);
-
     const user = await User.create({
       name,
       email,
@@ -25,13 +20,10 @@ exports.register = async (req, res) => {
     });
 
     res.status(201).json({ message: "User registered successfully" });
-
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
-
-// Login
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
