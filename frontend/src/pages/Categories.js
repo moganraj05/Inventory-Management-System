@@ -62,7 +62,7 @@ function Categories() {
         {/* GRID */}
         <div className="category-grid">
 
-          {/* LEFT: FORM (FIXED HEIGHT) */}
+         
           <div className="card category-form-card">
             <h3>{editId ? "Edit Category" : "Add New Category"}</h3>
 
