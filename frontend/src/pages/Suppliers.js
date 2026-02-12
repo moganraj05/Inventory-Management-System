@@ -64,7 +64,6 @@ function Suppliers() {
     <AdminLayout>
       <div className="supplier-container">
 
-        {/* HEADER */}
         <h1 className="page-title">Supplier Management</h1>
         <p className="page-subtitle">
           Manage vendor information and supplier relationships
